@@ -9,7 +9,7 @@ import Album from '../components/Album';
 import Sidebar from '../components/Sidebar';
 import Player from '../components/Player';
 
-import { convertAlbum, convertAlbums, skip } from '../utils';
+import { convertAlbum, convertAlbums, skip, convertSong } from '../utils';
 
 export default class AppContainer extends Component {
 
@@ -22,6 +22,7 @@ export default class AppContainer extends Component {
     this.next = this.next.bind(this);
     this.prev = this.prev.bind(this);
     this.selectAlbum = this.selectAlbum.bind(this);
+    this.selectArtist = this.selectArtist.bind(this);
     this.deselectAlbum = this.deselectAlbum.bind(this);
   }
 
@@ -29,6 +30,10 @@ export default class AppContainer extends Component {
     axios.get('/api/albums/')
       .then(res => res.data)
       .then(album => this.onLoad(convertAlbums(album)));
+
+    axios.get('/api/artists/')
+      .then(res => res.data)
+      .then(artists => this.setState({artists}));
 
     AUDIO.addEventListener('ended', () =>
       this.next());
@@ -95,9 +100,27 @@ export default class AppContainer extends Component {
       .then(res => res.data)
       .then(album => this.setState({
         selectedAlbum: convertAlbum(album)
-      })).then(() => {console.log(this.state)});
+      }))
   }
 
+  selectArtist (artistId) {
+
+    Promise.all([axios.get(`/api/artists/${artistId}`), axios.get(`/api/artists/${artistId}/albums`), axios.get(`/api/artists/${artistId}/songs`)])
+    .then(artistProps => {
+      
+      const convertedSongs = artistProps[2].data.map(song => convertSong(song));
+
+      this.setState({selectedArtist : artistProps[0].data});
+      this.setState({selectedArtistAlbums: convertAlbums(artistProps[1].data)});
+      this.setState({selectedArtistSongs: convertedSongs});
+    });
+
+    // axios.get(`/api/artists/${artistId}`)
+    //   .then(res => res.data)
+    //   .then(artist => this.setState({
+    //     selectedArtist: artist
+    //   }));
+  }
   deselectAlbum () {
     this.setState({ selectedAlbum: {}});
   }
@@ -118,7 +141,12 @@ export default class AppContainer extends Component {
             isPlaying: this.state.isPlaying,
             toggleOne: this.toggleOne,
             albums: this.state.albums,
-            selectAlbum: this.selectAlbum
+            selectAlbum: this.selectAlbum,
+            artists: this.state.artists,
+            selectArtist: this.selectArtist,
+            selectedArtist: this.state.selectedArtist,
+            selectedArtistAlbums: this.state.selectedArtistAlbums,
+            selectedArtistSongs: this.state.selectedArtistSongs
           })
           : null
 
