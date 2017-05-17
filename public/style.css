@@ -55,6 +55,8 @@ footer {
     cursor: pointer; }
   footer .progress-bar {
     transition: none !important; }
-
+.active {
+  color:red !important;
+}
 .album img {
   height: 300px; }

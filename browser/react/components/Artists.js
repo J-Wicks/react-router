@@ -15,7 +15,7 @@ const Artists = (props) => {
 		        return (
 		          <div className="list-group-item" key={artist.id}>
 		            {/* determine where to actually Link to later! */}
-		            <Link to={`/artists/${artist.id}`} onClick={() => selectArtist(artist.id)}>{ artist.name } </Link>   
+		            <Link to={`/artists/${artist.id}`} activeClassName="active" onClick={() => selectArtist(artist.id)}>{ artist.name } </Link>   
 		          </div>
 		        )    
 		      })

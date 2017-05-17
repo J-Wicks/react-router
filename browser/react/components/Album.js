@@ -26,7 +26,13 @@ class Album extends Component   {
     return (
       <div className="album">
         <div>
-          <h3>{ console.log('in render ', this.props.album, this.props.currentSong)}</h3>
+          <h3>{this.props.album.name}   
+            <a href={`mailto:artfullu@gmail.com?subject=THISTHESUBJECT&body=Youre%20gonna%20love%20${this.props.album.name}`} >       
+            <button className="btn basic-btn">
+              <i className="a fa-share-square-o"> </i>
+            </button>
+            </a>
+          </h3>
           <img src={ this.props.album.imageUrl} className="img-thumbnail" />
         </div>
       <Songs

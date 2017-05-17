@@ -76,6 +76,10 @@
 	
 	var _Artist2 = _interopRequireDefault(_Artist);
 	
+	var _Songs = __webpack_require__(267);
+	
+	var _Songs2 = _interopRequireDefault(_Songs);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	_reactDom2.default.render(_react2.default.createElement(
@@ -88,7 +92,12 @@
 			_react2.default.createElement(_reactRouter.Route, { path: 'albums/:albumId', component: _Album2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'albums', component: _Albums2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'artists', component: _Artists2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'artists/:artistId', component: _Artist2.default })
+			_react2.default.createElement(
+				_reactRouter.Route,
+				{ path: 'artists/:artistId', component: _Artist2.default },
+				_react2.default.createElement(_reactRouter.Route, { path: 'albums', component: _Albums2.default }),
+				_react2.default.createElement(_reactRouter.Route, { path: 'songs', component: _Songs2.default })
+			)
 		)
 	), document.getElementById('app'));
 
@@ -22045,12 +22054,6 @@
 	        _this4.setState({ selectedArtistAlbums: (0, _utils.convertAlbums)(artistProps[1].data) });
 	        _this4.setState({ selectedArtistSongs: convertedSongs });
 	      });
-	
-	      // axios.get(`/api/artists/${artistId}`)
-	      //   .then(res => res.data)
-	      //   .then(artist => this.setState({
-	      //     selectedArtist: artist
-	      //   }));
 	    }
 	  }, {
 	    key: 'deselectAlbum',
@@ -28795,7 +28798,20 @@
 	          _react2.default.createElement(
 	            'h3',
 	            null,
-	            console.log('in render ', this.props.album, this.props.currentSong)
+	            this.props.album.name,
+	            _react2.default.createElement(
+	              'a',
+	              { href: 'mailto:artfullu@gmail.com?subject=THISTHESUBJECT&body=Youre%20gonna%20love%20' + this.props.album.name },
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn basic-btn' },
+	                _react2.default.createElement(
+	                  'i',
+	                  { className: 'a fa-share-square-o' },
+	                  ' '
+	                )
+	              )
+	            )
 	          ),
 	          _react2.default.createElement('img', { src: this.props.album.imageUrl, className: 'img-thumbnail' })
 	        ),
@@ -28944,7 +28960,7 @@
 	        { className: 'menu-item active' },
 	        _react2.default.createElement(
 	          _reactRouter.Link,
-	          { to: '/albums', onClick: deselectAlbum },
+	          { to: '/albums', activeClassName: 'active', onClick: deselectAlbum },
 	          'Go to Albums'
 	        )
 	      )
@@ -28957,7 +28973,7 @@
 	        { className: 'menu-item' },
 	        _react2.default.createElement(
 	          _reactRouter.Link,
-	          { to: '/artists' },
+	          { to: '/artists', activeClassName: 'active' },
 	          'ARTISTS'
 	        )
 	      )
@@ -29116,7 +29132,7 @@
 						{ className: 'list-group-item', key: artist.id },
 						_react2.default.createElement(
 							_reactRouter.Link,
-							{ to: '/artists/' + artist.id, onClick: function onClick() {
+							{ to: '/artists/' + artist.id, activeClassName: 'active', onClick: function onClick() {
 									return selectArtist(artist.id);
 								} },
 							artist.name,
@@ -29140,8 +29156,6 @@
 	  value: true
 	});
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -29154,80 +29168,48 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var Artist = function Artist(props) {
 	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	  var selectedArtist = props.selectedArtist;
+	  var children = props.children;
+	  var propsToPassToChildren = {
+	    albums: props.selectedArtistAlbums,
+	    songs: props.selectedArtistSongs
+	  };
 	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Artist = function (_Component) {
-	  _inherits(Artist, _Component);
-	
-	  function Artist(props) {
-	    _classCallCheck(this, Artist);
-	
-	    var _this = _possibleConstructorReturn(this, (Artist.__proto__ || Object.getPrototypeOf(Artist)).call(this, props));
-	
-	    _this.state = {};
-	    return _this;
-	  }
-	
-	  _createClass(Artist, [{
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
-	
-	      return _react2.default.createElement(
-	        'div',
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      selectedArtist.name
+	    ),
+	    _react2.default.createElement(
+	      'ul',
+	      { className: 'nav nav-tabs' },
+	      _react2.default.createElement(
+	        'li',
 	        null,
 	        _react2.default.createElement(
-	          'h3',
-	          null,
-	          this.props.selectedArtist.name
-	        ),
-	        this.props.selectedArtistAlbums && this.props.selectedArtistAlbums.map(function (album) {
-	          return _react2.default.createElement(
-	            'div',
-	            { className: 'col-xs-4', key: album.id },
-	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { to: '/albums/' + album.id, className: 'thumbnail', onClick: function onClick() {
-	                  return _this2.props.selectAlbum(album.id);
-	                } },
-	              _react2.default.createElement('img', { src: album.imageUrl }),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'caption' },
-	                _react2.default.createElement(
-	                  'h5',
-	                  null,
-	                  _react2.default.createElement(
-	                    'span',
-	                    null,
-	                    album.name
-	                  )
-	                ),
-	                _react2.default.createElement(
-	                  'small',
-	                  null,
-	                  album.songs.length,
-	                  ' songs'
-	                )
-	              )
-	            )
-	          );
-	        }),
-	        _react2.default.createElement(_Songs2.default, {
-	          songs: this.props.selectedArtistSongs,
-	          currentSong: this.props.currentSong,
-	          isPlaying: this.props.isPlaying,
-	          toggleOne: this.props.toggleOne })
-	      );
-	    }
-	  }]);
-	
-	  return Artist;
-	}(_react.Component);
+	          _reactRouter.Link,
+	          { to: '/artists/' + props.selectedArtist.id + '/albums' },
+	          'ALBUMS'
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/artists/' + props.selectedArtist.id + '/songs' },
+	          'SONGS'
+	        )
+	      )
+	    ),
+	    children && _react2.default.cloneElement(children, propsToPassToChildren)
+	  );
+	};
 	
 	exports.default = Artist;
 

@@ -115,11 +115,6 @@ export default class AppContainer extends Component {
       this.setState({selectedArtistSongs: convertedSongs});
     });
 
-    // axios.get(`/api/artists/${artistId}`)
-    //   .then(res => res.data)
-    //   .then(artist => this.setState({
-    //     selectedArtist: artist
-    //   }));
   }
   deselectAlbum () {
     this.setState({ selectedAlbum: {}});
